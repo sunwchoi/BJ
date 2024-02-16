@@ -1,13 +1,13 @@
 #include <iostream>
+#include <vector>
 
 using namespace std;
 
 int N;
 string  mp[100];
-bool    vi1[100][100];
-bool    vi2[100][100];
+vector<vector<bool> >    vi;
 
-bool    isValid(int x, int y, int a, int b, bool vi[100][100])
+bool    isValid(int x, int y, int a, int b)
 {
     if (!(0 <= a && a < N) || !(0 <= b && b < N)
         || vi[b][a] || mp[b][a] != mp[y][x])
@@ -15,17 +15,17 @@ bool    isValid(int x, int y, int a, int b, bool vi[100][100])
     return true;
 }
 
-void    dfs(int x, int y, bool vi[100][100])
+void    dfs(int x, int y)
 {
     vi[y][x] = true;
-    if (isValid(x, y, x + 1, y, vi))
-        dfs(x + 1, y, vi);
-    if (isValid(x, y, x - 1, y, vi))
-        dfs(x - 1, y, vi);
-    if (isValid(x, y, x, y + 1, vi))
-        dfs(x, y + 1, vi);
-    if (isValid(x, y, x, y - 1, vi))
-        dfs(x, y - 1, vi);
+    if (isValid(x, y, x + 1, y))
+        dfs(x + 1, y);
+    if (isValid(x, y, x - 1, y))
+        dfs(x - 1, y);
+    if (isValid(x, y, x, y + 1))
+        dfs(x, y + 1);
+    if (isValid(x, y, x, y - 1))
+        dfs(x, y - 1);
     if (mp[y][x] == 'R')
         mp[y][x] = 'G';
 }
@@ -40,15 +40,17 @@ int main()
     for (int i = 0; i < N; i++)
         cin >> mp[i];
     int cnt = 0;
+    vi = vector<vector<bool> >(N, vector<bool>(N));
     for (int i = 0; i < N; i++)
         for (int j = 0; j < N; j++)
-            if (!vi1[i][j] && ++cnt)
-                dfs(j, i, vi1);
+            if (!vi[i][j] && ++cnt)
+                dfs(j, i);
     cout << cnt << "\n";
     cnt = 0;
+    vi = vector<vector<bool> >(N, vector<bool>(N));
     for (int i = 0; i < N; i++)
         for (int j = 0; j < N; j++)
-            if (!vi2[i][j] && ++cnt)
-                dfs(j, i, vi2);
+            if (!vi[i][j] && ++cnt)
+                dfs(j, i);
     cout << cnt << "\n";
 }
