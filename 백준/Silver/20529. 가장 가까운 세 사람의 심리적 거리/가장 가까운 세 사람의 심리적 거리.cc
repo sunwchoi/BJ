@@ -1,57 +1,27 @@
 #include <iostream>
 #include <climits>
-#include <map>
 
 using namespace std;
 
 int T, N;
-map<string, int> mp;
+string  mbti[100000];
 
-int cnt(map<string, int>::iterator idx, map<string, int>::iterator jdx)
+int cnt(int idx, int jdx)
 {
     int ret = 0;
     for (int i = 0; i < 4; i++)
-        if ((idx->first)[i] != (jdx->first)[i])
+        if (mbti[idx][i] != mbti[jdx][i])
             ret++;
-    return ret;
-}
-
-int f3(map<string, int>::iterator it, map<string, int>::iterator jt)
-{
-    int ret = INT_MAX;
-    for (auto i = mp.begin(); i != mp.end(); i++)
-    {
-        if (i == it || i == jt)
-            continue;
-        ret = min(cnt(it, jt) + cnt(jt, i) + cnt(i, it), ret);
-    }
-    return ret;
-}
-
-int f2(map<string, int>::iterator it)
-{
-    int ret = INT_MAX;
-    for (auto i = mp.begin(); i != mp.end(); i++)
-    {
-        if (i == it)
-            continue ;
-        if (it->second + i->second >= 3)
-            ret = min(cnt(it, i) * 2, ret);
-        else
-            ret = min(f3(it, i), ret);
-    }
     return ret;
 }
 
 int f()
 {
     int ret = INT_MAX;
-    for (auto i = mp.begin(); i != mp.end(); i++)
-    {
-        if (i->second >= 3)
-            return 0;
-        ret = min(f2(i), ret);
-    }
+    for (int i = 0; i < N; i++)
+        for (int j = i + 1; j < N; j++)
+            for (int k = j + 1; k < N; k++)
+                ret = min(cnt(i, j) + cnt(j, k) + cnt(k, i), ret);
     return ret;
 }
 
@@ -65,13 +35,8 @@ int main()
     for (int i = 0; i < T; i++)
     {
         cin >> N;
-        mp.clear();
         for (int j = 0; j < N; j++)
-        {
-            string tmp;
-            cin >> tmp;
-            mp[tmp]++;
-        }
-        cout << f() << "\n";
+            cin >> mbti[j];
+        cout << ((N >= 16 * 3) ? 0 : f()) << "\n";
     }
 }
